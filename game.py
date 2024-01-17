@@ -50,8 +50,15 @@ class Game:
             print(f"{card['Rank']} of {card['Suit']}")
         print("\n")
 
-    # def select_cards(self):
-        
+    def select_cards(self, player):
+        print(f"{player.name}'s hand: {player.show_hand()}")
+
+        selected_cards = input("Select cards to play (comma-separated): ").split(',')
+
+        # Sprawdzamy, czy wybrane karty istnieją w ręce gracza
+        valid_selected_cards = [card.strip() for card in selected_cards if card.strip() in player.deck]
+
+        return valid_selected_cards
 
     # def is_valid_combination(self):
 
@@ -65,6 +72,7 @@ player_instance = game_instance.create_player("Player1")
 
 # Rysowanie pięciu kart dla gracza
 game_instance.draw_cards(player_instance)
-
+selection = game_instance.select_cards(player_instance)
 # Wyświetlenie talii gracza
 print(f"{player_instance.name}'s hand: {player_instance.show_hand()}")
+print(f"{selection}")

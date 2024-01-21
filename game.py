@@ -33,43 +33,25 @@ class Game:
 
     def create_player(self, name):
         return Player(name, 0)
-
+    
     def is_valid(self, pile):
-
-        if len(pile) < 3:
+        if len(pile) != 3:
             return False
-        
-        self.are_they_the_same_suit = False
-        self.are_they_all_different_suits = False
 
-        # Checking if the suits are unique
-        self.unique_suits = {card['Suit'] for card in pile}
-        if len(self.unique_suits) == len(pile):
-            self.are_they_all_different_suits = True
+        suits_set = set(card['Suit'] for card in pile)
+        values_set = set(card['Value'] for card in pile)
 
-        
-        # Check if all cards in the pile have the same suit
-        first_card_suit = pile[0]['Suit']
+        # Check for three cards with the same rank but different suits
+        if len(suits_set) == 3 and len(values_set) == 1:
+            return True
 
-        for card in pile[1:]:
-            if card['Suit'] != first_card_suit:
-                self.are_they_the_same_suit = False
+        # Check for three consecutive cards with the same suit
+        if len(suits_set) == 1 and len(values_set) == 3:
+            sorted_values = sorted(values_set)
+            if sorted_values[2] - sorted_values[0] == 2:
+                return True
 
-        # Check if the cards are in a valid sequence of same suits and sequential values
-        if self.are_they_the_same_suit == True:
-            ranks = [card['Value'] for card in pile]
-            sorted_ranks = sorted(ranks)
-            if sorted_ranks != ranks:
-                return False
-        
-        # Check if the pile contains a valid combination of different suits and same values
-        if self.are_they_all_different_suits == True:
-            first_card_value = pile[0]['Value']
-            for card in pile[1:]:
-                if card['Value'] != first_card_value:
-                    return False
-                
-        return True
+        return False
     
     def shuffle_deck(self):
         random.shuffle(self.general_deck)
@@ -96,7 +78,15 @@ class Game:
         self.display_deck(self.player1.deck)
 
         # Get input from the player for the cards to put on the table
-        selected_cards_indices = input("Enter the indices of cards to put on the table (comma-separated): ").split(',')
+        user_input = input("Enter the indices of cards to put on the table (comma-separated) or 'skip' to skip the round: ")
+
+        if user_input.lower() == 'skip':
+            # Skip the round and draw cards
+            self.draw_cards()
+            print("Round skipped. Cards drawn.")
+            return
+
+        selected_cards_indices = user_input.split(',')
         selected_cards_indices = [int(idx.strip()) for idx in selected_cards_indices]
 
         # Validate selected indices
@@ -143,9 +133,13 @@ game_instance.draw_cards()
 print("Player 1's Deck after drawing cards:")
 game_instance.display_deck(game_instance.player1.deck)
 
-game_instance.put_cards_on_table()
-print("Table after putting cards:")
-game_instance.display_deck(game_instance.table)
+for i in range(10):
+
+
+    game_instance.put_cards_on_table()
+    print("Table after putting cards:")
+    game_instance.display_deck(game_instance.table)
+
 
 print("Player 1's Deck after putting cards on the table:")
 game_instance.display_deck(game_instance.player1.deck)

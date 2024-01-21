@@ -7,72 +7,109 @@ class Game:
         self.player1 = None
         self.player2 = None
         self.general_deck = None
+        self.table = []
 
     def create_deck(self):
-        suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
-        ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
-        general_deck = []
+        self.suits = ['hearts', 'diamonds', 'clubs', 'spades']
+        self.ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+        self.ranks_value = {'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 11, 'Q': 12, 'K': 13}
+        self.general_deck = []
 
         for i in range(2):
-            for suit in suits:
-                for rank in ranks:
-                    card_name = f"{rank} of {suit} ({i + 1})"
-                    general_deck.append({
+            for suit in self.suits:
+                for rank in self.ranks:
+                    value = self.ranks_value[rank]
+                    card_name = f"{rank} of {suit}"
+                    self.general_deck.append({
                         'Suit': suit,
                         'Rank': rank,
+                        'Value': value,
                         'DeckNumber': i + 1
                     })
 
-        return general_deck
+        return self.general_deck
+
+
 
     def create_player(self, name):
         return Player(name, 0)
 
-    def draw_cards(self, player, num_cards=1):
-        if not self.general_deck:
-            self.general_deck = self.create_deck()
-            num_cards = 7
+    def is_valid(self, pile):
 
-        # Sprawdzamy, czy talia ogólna nie jest pusta
-        if not self.general_deck:
-            print("No cards left in the deck.")
-            return
+        if len(pile) < 3:
+            return False
+        
+        self.are_they_the_same_suit = False
+        self.are_they_all_different_suits = False
 
-        # Losujemy karty i dodajemy do talii gracza
-        drawn_cards = random.sample(self.general_deck, min(num_cards, len(self.general_deck)))
-        player.add_to_hand(drawn_cards)
+        # Checking if the suits are unique
+        self.unique_suits = {card['Suit'] for card in pile}
+        if len(self.unique_suits) == len(pile):
+            self.are_they_all_different_suits = True
 
-        # Usuwamy wylosowane karty z talii ogólnej
-        self.general_deck = [card for card in self.general_deck if card not in drawn_cards]
+        
+        # Check if all cards in the pile have the same suit
+        first_card_suit = pile[0]['Suit']
 
-        print("Remaining cards in general deck:")
-        for card in self.general_deck:
-            print(f"{card['Rank']} of {card['Suit']}")
-        print("\n")
+        for card in pile[1:]:
+            if card['Suit'] != first_card_suit:
+                self.are_they_the_same_suit = False
 
-    def select_cards(self, player):
-        print(f"{player.name}'s hand: {player.show_hand()}")
-
-        selected_cards = input("Select cards to play (comma-separated): ").split(',')
-
-        # Sprawdzamy, czy wybrane karty istnieją w ręce gracza
-        valid_selected_cards = [card.strip() for card in selected_cards if card.strip() in player.deck]
-
-        return valid_selected_cards
-
-    # def is_valid_combination(self):
-
-    # def edit_set_on_table(self):
-
+        # Check if the cards are in a valid sequence of same suits and sequential values
+        if self.are_they_the_same_suit == True:
+            ranks = [card['Value'] for card in pile]
+            sorted_ranks = sorted(ranks)
+            if sorted_ranks != ranks:
+                return False
+        
+        # Check if the pile contains a valid combination of different suits and same values
+        if self.are_they_all_different_suits == True:
+            first_card_value = pile[0]['Value']
+            for card in pile[1:]:
+                if card['Value'] != first_card_value:
+                    return False
+                
+        return True
     
+    def draw_cards(self):
+        pass
+    
+    def put_cards_on_table(self):
+        input_pile = input("Write the names of the cards you want to put on the table (comma separated), example: queen of hearts, 2 of diamonds, 7 of spades\n")
+        # Convert string representation of cards to list of dictionaries
+        self.pile = [{'Suit': card.split(' of ')[1], 'Rank': card.split(' of ')[0]} for card in input_pile.split(',')]
+        
+        self.valid = self.is_valid(self.pile)
 
-# Przykładowe użycie
+        if self.valid:
+            self.table.append(self.pile)
+        else:
+            print("The combination is invalid")
+            
+
+    def display_deck(self, deck):
+        for card in deck:
+            print(f"{card['Rank']} of {card['Suit']} (Value: {card['Value']})")
+
+# Example usage
 game_instance = Game()
-player_instance = game_instance.create_player("Player1")
 
-# Rysowanie pięciu kart dla gracza
-game_instance.draw_cards(player_instance)
-selection = game_instance.select_cards(player_instance)
-# Wyświetlenie talii gracza
-print(f"{player_instance.name}'s hand: {player_instance.show_hand()}")
-print(f"{selection}")
+# Create and display the deck
+deck = game_instance.create_deck()
+print("Created Deck:")
+game_instance.display_deck(deck)
+
+# Put cards on the table
+game_instance.put_cards_on_table()
+
+# Display the current table
+print("Table:")
+for pile in game_instance.table:
+    print(pile)
+
+
+game_instance.put_cards_on_table()
+
+print("Table:")
+for pile in game_instance.table:
+    print(pile)

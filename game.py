@@ -73,7 +73,6 @@ class Game:
             self.player1.deck.append(self.general_deck.pop())
     
     def put_cards_on_table(self):
-
         print("Player 1's Current Hand:")
         self.display_deck(self.player1.deck)
 
@@ -102,8 +101,8 @@ class Game:
             print("Invalid combination of cards. Please select a valid set of cards.")
             return
 
-        # Update the table with the valid pile
-        self.table.extend(pile)
+        # Append the valid pile as a separate list to the table
+        self.table.append(pile)
 
         # Remove the selected cards from the player's hand
         for idx in sorted(selected_cards_indices, reverse=True):
@@ -112,9 +111,17 @@ class Game:
         print("Cards successfully put on the table.")
             
 
+    def display_table_deck(self, deck):
+        for i, pile in enumerate(deck, start=1):
+            print(f"Pile {i}:")
+            for card in pile:
+                print(f"{card['Rank']} of {card['Suit']} (Value: {card['Value']})")
+
     def display_deck(self, deck):
         for card in deck:
             print(f"{card['Rank']} of {card['Suit']} (Value: {card['Value']})")
+
+    
 
 # Example usage
 game_instance = Game()
@@ -138,7 +145,7 @@ for i in range(10):
 
     game_instance.put_cards_on_table()
     print("Table after putting cards:")
-    game_instance.display_deck(game_instance.table)
+    game_instance.display_table_deck(game_instance.table)
 
 
 print("Player 1's Deck after putting cards on the table:")

@@ -59,6 +59,31 @@ def put_cards_on_table():
     # Redirect to the board
     return redirect(url_for('board'))
 
+@app.route('/add_cards_to_stack', methods=['POST'])
+def add_cards_to_stack():
+    global game_instance
+
+    if game_instance is None:
+        return redirect(url_for('index'))
+
+    # Get selected card indices, stack index, and position from the form
+    selected_cards_indices = request.form.get('card_indices')
+    stack_index = int(request.form.get('stack_index'))
+    position = request.form.get('position')
+
+    # Convert selected card indices to a list of integers
+    selected_cards_indices = [int(idx.strip()) for idx in selected_cards_indices.split(',')]
+
+    # Call the add_cards_to_stack method in the Game class
+    success, message = game_instance.add_cards_to_stack(selected_cards_indices, stack_index, position)
+
+    # Flash the error message if not successful
+    if not success:
+        flash(message, 'error')
+
+    # Redirect to the board
+    return redirect(url_for('board'))
+
 @app.route('/draw_cards', methods=['POST'])
 def draw_cards():
     if game_instance:

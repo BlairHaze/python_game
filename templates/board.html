@@ -43,6 +43,26 @@
         </form>
     </div>
 
+    <!-- Section to input cards into an existing stack on the table -->
+    <div>
+        <form action="{{ url_for('add_cards_to_stack') }}" method="post">
+            <label for="card_indices">Enter Card Indices (comma-separated):</label>
+            <input type="text" id="card_indices" name="card_indices" required>
+
+            <label for="stack_index">Enter Stack Index:</label>
+            <input type="number" id="stack_index" name="stack_index" required>
+
+            <label for="position">Choose Position (front or end):</label>
+            <select id="position" name="position" required>
+                <option value="front">Front</option>
+                <option value="end">End</option>
+            </select>
+
+            <input type="submit" value="Submit Cards to Stack">
+        </form>
+    </div>
+
+
     <!-- Display the table with cards -->
     <h2>Table:</h2>
     <div class="table-container">

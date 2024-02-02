@@ -1,18 +1,42 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Strona Główna</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Rummy Game</title>
 </head>
 
 <body>
-    <h1>Tu zaczyna się twoja przygoda!</h1>
-    <p>Lubię <em>kotki</em>, <strong>kucyki</strong> i inne słodkie rzeczy</p>
-    <p>Witaj {{content}}!!! {{r}}</p>
-    {% for x in range(1,10) %}
-    <h5>Fajna strona</h5>
-    {% endfor %}
+    <h1>Rummy-like Card Game</h1>
+
+    <h2>Player's Deck:</h2>
+    <div class="card-container">
+        {% set cards_per_row = 5 %}
+        {% for card in player_deck %}
+        {% if loop.index % cards_per_row == 1 %}
+        <div class="card-row">
+            {% endif %}
+
+            <!-- Assuming you have card images named 'rank_suit.png' in your static folder -->
+            <img class="card"
+                src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
+                alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+
+            {% if loop.index % cards_per_row == 0 or loop.last %}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <!-- Add a button to draw cards -->
+    <form action="{{ url_for('draw_cards') }}" method="post">
+        <input type="submit" value="Draw Cards">
+    </form>
+
+    <!-- Add more game-related content or controls as needed -->
+
 </body>
 
 </html>

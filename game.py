@@ -72,100 +72,100 @@ class Game:
             # Draw 1 card if the deck already exists
             self.player1.deck.append(self.general_deck.pop())
     
-    def put_cards_on_table(self):
-        print("Player 1's Current Hand:")
-        self.display_deck(self.player1.deck)
+#     def put_cards_on_table(self):
+#         print("Player 1's Current Hand:")
+#         self.display_deck(self.player1.deck)
 
-        # Get input from the player for the cards to put on the table
-        user_input = input("Enter the indices of cards to put on the table (comma-separated) or 'skip' to skip the round: ")
+#         # Get input from the player for the cards to put on the table
+#         user_input = input("Enter the indices of cards to put on the table (comma-separated) or 'skip' to skip the round: ")
 
-        if user_input.lower() == 'skip':
-            # Skip the round and draw cards
-            self.draw_cards()
-            print("Round skipped. Cards drawn.")
-            return
+#         if user_input.lower() == 'skip':
+#             # Skip the round and draw cards
+#             self.draw_cards()
+#             print("Round skipped. Cards drawn.")
+#             return
 
-        selected_cards_indices = user_input.split(',')
-        selected_cards_indices = [int(idx.strip()) for idx in selected_cards_indices]
+#         selected_cards_indices = user_input.split(',')
+#         selected_cards_indices = [int(idx.strip()) for idx in selected_cards_indices]
 
-        # Validate selected indices
-        if not all(0 <= idx < len(self.player1.deck) for idx in selected_cards_indices):
-            print("Invalid card indices. Please select cards from your hand.")
-            return
+#         # Validate selected indices
+#         if not all(0 <= idx < len(self.player1.deck) for idx in selected_cards_indices):
+#             print("Invalid card indices. Please select cards from your hand.")
+#             return
 
-        # Create a pile with selected cards
-        pile = [self.player1.deck[idx] for idx in selected_cards_indices]
+#         # Create a pile with selected cards
+#         pile = [self.player1.deck[idx] for idx in selected_cards_indices]
 
-        # Check if the pile is valid using is_valid function
-        if not self.is_valid(pile):
-            print("Invalid combination of cards. Please select a valid set of cards.")
-            return
+#         # Check if the pile is valid using is_valid function
+#         if not self.is_valid(pile):
+#             print("Invalid combination of cards. Please select a valid set of cards.")
+#             return
 
-        # Append the valid pile as a separate list to the table
-        self.table.append(pile)
+#         # Append the valid pile as a separate list to the table
+#         self.table.append(pile)
 
-        # Remove the selected cards from the player's hand
-        for idx in sorted(selected_cards_indices, reverse=True):
-            del self.player1.deck[idx]
+#         # Remove the selected cards from the player's hand
+#         for idx in sorted(selected_cards_indices, reverse=True):
+#             del self.player1.deck[idx]
 
-        print("Cards successfully put on the table.")
+#         print("Cards successfully put on the table.")
             
 
-    def display_table_deck(self, deck):
-        for i, pile in enumerate(deck, start=1):
-            print(f"Pile {i}:")
-            for card in pile:
-                print(f"{card['Rank']} of {card['Suit']} (Value: {card['Value']})")
+#     def display_table_deck(self, deck):
+#         for i, pile in enumerate(deck, start=1):
+#             print(f"Pile {i}:")
+#             for card in pile:
+#                 print(f"{card['Rank']} of {card['Suit']} (Value: {card['Value']})")
 
     def display_deck(self, deck):
-        for card in deck:
-            print(f"{card['Rank']} of {card['Suit']} (Value: {card['Value']})")
+         for card in deck:
+             print(f"{card['Rank']} of {card['Suit']} (Value: {card['Value']})")
 
     
 
-# Example usage
-game_instance = Game()
+# # Example usage
+# game_instance = Game()
 
 
 
-game_instance.draw_cards()
-print("Player 1's Deck after drawing cards:")
-game_instance.display_deck(game_instance.player1.deck)
+# game_instance.draw_cards()
+# print("Player 1's Deck after drawing cards:")
+# game_instance.display_deck(game_instance.player1.deck)
 
-print("General deck:")
-game_instance.display_deck(game_instance.general_deck)
-
-
-game_instance.draw_cards()
-print("Player 1's Deck after drawing cards:")
-game_instance.display_deck(game_instance.player1.deck)
-
-for i in range(10):
+# print("General deck:")
+# game_instance.display_deck(game_instance.general_deck)
 
 
-    game_instance.put_cards_on_table()
-    print("Table after putting cards:")
-    game_instance.display_table_deck(game_instance.table)
+# game_instance.draw_cards()
+# print("Player 1's Deck after drawing cards:")
+# game_instance.display_deck(game_instance.player1.deck)
+
+# for i in range(10):
 
 
-print("Player 1's Deck after putting cards on the table:")
-game_instance.display_deck(game_instance.player1.deck)
-
-print("General deck:")
-game_instance.display_deck(game_instance.general_deck)
+#     game_instance.put_cards_on_table()
+#     print("Table after putting cards:")
+#     game_instance.display_table_deck(game_instance.table)
 
 
-# # Put cards on the table
-# game_instance.put_cards_on_table()
+# print("Player 1's Deck after putting cards on the table:")
+# game_instance.display_deck(game_instance.player1.deck)
 
-# # Display the current table
-# print("Table:")
-# for pile in game_instance.table:
-#     print(pile)
+# print("General deck:")
+# game_instance.display_deck(game_instance.general_deck)
 
 
-# game_instance.put_cards_on_table()
+# # # Put cards on the table
+# # game_instance.put_cards_on_table()
 
-# print("Table:")
-# for pile in game_instance.table:
-#     print(pile)
+# # # Display the current table
+# # print("Table:")
+# # for pile in game_instance.table:
+# #     print(pile)
+
+
+# # game_instance.put_cards_on_table()
+
+# # print("Table:")
+# # for pile in game_instance.table:
+# #     print(pile)

@@ -15,13 +15,17 @@
 
     <h2>Player's Deck:</h2>
     <div class="card-container">
-        {% set cards_per_row = 5 %}
+        {% set cards_per_row = 6 %}
         {% for card in player_deck %}
         <div class="card" onclick="selectCard({{ loop.index0 }})">
             <!-- Assuming you have card images named 'rank_suit.png' in your static folder -->
             <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
                 alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+            <div class="index-label">{{ loop.index0 }}</div> <!-- Adjusted index display -->
         </div>
+        {% if loop.index % cards_per_row == 0 %}
+        <div class="clear"></div>
+        {% endif %}
         {% endfor %}
     </div>
 

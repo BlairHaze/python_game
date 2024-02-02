@@ -1,0 +1,53 @@
+<!-- board.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Rummy Game</title>
+</head>
+
+<body>
+    <h1>Rummy-like Card Game</h1>
+
+    <h2>Player's Deck:</h2>
+    <div class="card-container">
+        {% set cards_per_row = 5 %}
+        {% for card in player_deck %}
+        <div class="card" onclick="selectCard({{ loop.index0 }})">
+            <!-- Assuming you have card images named 'rank_suit.png' in your static folder -->
+            <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
+                alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Add a button to draw cards -->
+    <form action="{{ url_for('draw_cards') }}" method="post">
+        <input type="submit" value="Draw Cards">
+    </form>
+
+    <!-- Section to input a set of cards to put on the table -->
+    <div>
+        <form action="{{ url_for('put_cards_on_table') }}" method="post">
+            <label for="card_indices">Enter Card Indices (comma-separated):</label>
+            <input type="text" id="card_indices" name="card_indices" required>
+            <input type="submit" value="Submit Set">
+        </form>
+    </div>
+
+    <!-- Add more game-related content or controls as needed -->
+    {% if error_messages %}
+    <div class="error-messages">
+        {% for error_message in error_messages %}
+        <p>{{ error_message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</body>
+
+</html>

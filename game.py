@@ -1,11 +1,10 @@
-import random
 from player import Player
+import random
 
 class Game:
-
-    def __init__(self):
-        self.player1 = None
-        self.player2 = None
+    def __init__(self, player1_name=None, player2_name=None):
+        self.player1 = self.create_player(player1_name) if player1_name else None
+        self.player2 = self.create_player(player2_name) if player2_name else None
         self.general_deck = None
         self.table = []
 
@@ -72,44 +71,26 @@ class Game:
             # Draw 1 card if the deck already exists
             self.player1.deck.append(self.general_deck.pop())
     
-#     def put_cards_on_table(self):
-#         print("Player 1's Current Hand:")
-#         self.display_deck(self.player1.deck)
+    def put_cards_on_table(self, selected_cards_indices):
+        # Validate selected indices
+        if not all(0 <= idx < len(self.player1.deck) for idx in selected_cards_indices):
+            return False, "Invalid card indices. Please select cards from your hand."
 
-#         # Get input from the player for the cards to put on the table
-#         user_input = input("Enter the indices of cards to put on the table (comma-separated) or 'skip' to skip the round: ")
+        # Create a pile with selected cards
+        pile = [self.player1.deck[idx] for idx in selected_cards_indices]
 
-#         if user_input.lower() == 'skip':
-#             # Skip the round and draw cards
-#             self.draw_cards()
-#             print("Round skipped. Cards drawn.")
-#             return
+        # Check if the pile is valid using is_valid function
+        if not self.is_valid(pile):
+            return False, "Invalid combination of cards. Please select a valid set of cards."
 
-#         selected_cards_indices = user_input.split(',')
-#         selected_cards_indices = [int(idx.strip()) for idx in selected_cards_indices]
+        # Append the valid pile as a separate list to the table
+        self.table.append(pile)
 
-#         # Validate selected indices
-#         if not all(0 <= idx < len(self.player1.deck) for idx in selected_cards_indices):
-#             print("Invalid card indices. Please select cards from your hand.")
-#             return
+        # Remove the selected cards from the player's hand
+        for idx in sorted(selected_cards_indices, reverse=True):
+            del self.player1.deck[idx]
 
-#         # Create a pile with selected cards
-#         pile = [self.player1.deck[idx] for idx in selected_cards_indices]
-
-#         # Check if the pile is valid using is_valid function
-#         if not self.is_valid(pile):
-#             print("Invalid combination of cards. Please select a valid set of cards.")
-#             return
-
-#         # Append the valid pile as a separate list to the table
-#         self.table.append(pile)
-
-#         # Remove the selected cards from the player's hand
-#         for idx in sorted(selected_cards_indices, reverse=True):
-#             del self.player1.deck[idx]
-
-#         print("Cards successfully put on the table.")
-            
+        return True, "Cards successfully put on the table."          
 
 #     def display_table_deck(self, deck):
 #         for i, pile in enumerate(deck, start=1):

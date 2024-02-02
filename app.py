@@ -30,16 +30,18 @@ def start_game():
 
 @app.route('/board')
 def board():
-    if game_instance:
-        # Display the player's deck on the web page
-        player_deck = game_instance.player1.deck if game_instance.player1 else []
-
-        # Get flashed error messages
-        error_messages = get_flashed_messages(category_filter=['error'])
-
-        return render_template('board.html', player_deck=player_deck, error_messages=error_messages)
-    else:
+    global game_instance
+    
+    if game_instance is None:
         return redirect(url_for('index'))
+
+    # Display the player's deck on the web page
+    player_deck = game_instance.player1.deck if game_instance.player1 else []
+
+    # Get flashed error messages
+    error_messages = get_flashed_messages(category_filter=['error'])
+
+    return render_template('board.html', player_deck=player_deck, error_messages=error_messages, game_instance=game_instance)
     
 @app.route('/put_cards_on_table', methods=['POST'])
 def put_cards_on_table():

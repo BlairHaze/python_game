@@ -10,12 +10,12 @@ body {
     margin: 0 auto;
     border: 1px solid #ccc;
     padding: 20px 10px;
-    /* Adjust top and bottom padding */
     position: relative;
 }
 
 .card {
-    width: calc(16.666% - 10px);
+    width: 100px;
+    /* Set a fixed width for each card */
     margin: 5px;
     text-align: center;
     position: relative;
@@ -32,7 +32,6 @@ body {
     margin-top: -15px;
     position: absolute;
     top: 5px;
-    /* Adjust the position to be at the top of the card */
     left: 50%;
     transform: translateX(-50%);
     color: #fff;
@@ -65,4 +64,26 @@ body {
     flex-basis: 100%;
     height: 0;
     order: -1;
+}
+
+/* New styles for the table display */
+.table-container {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* Center the table sets */
+}
+
+.table-pile {
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid #000;
+    max-width: 100px;
+    /* Set max width for each pile */
+}
+
+.table-pile img {
+    max-width: 100%;
+    /* Ensure images inside each pile are responsive */
 }

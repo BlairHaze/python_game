@@ -43,6 +43,19 @@
         </form>
     </div>
 
+    <!-- Display the table with cards -->
+    <h2>Table:</h2>
+    <div class="table-container">
+        {% for pile in game_instance.table %}
+        <div class="table-pile">
+            {% for card in pile %}
+            <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
+                alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+
     <!-- Add more game-related content or controls as needed -->
     {% if error_messages %}
     <div class="error-messages">

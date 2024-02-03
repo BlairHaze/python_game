@@ -1,3 +1,5 @@
+/* Add this to your style.css or create a new style file */
+
 body {
     text-align: center;
     background-color: #f4f4f4;
@@ -136,7 +138,8 @@ a:hover {
 
 form {
     max-width: 300px;
-    margin: 0 auto;
+    margin: 20px auto;
+    /* Increased margin for more space */
     background-color: #fff;
     /* Set a white background for the form */
     padding: 20px;
@@ -152,7 +155,8 @@ label {
     /* Set a color for labels */
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="number"] {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -177,4 +181,11 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background-color: #2074a0;
     /* Use a slightly darker shade for hover effect */
+}
+
+.players-container {
+    display: flex;
+    justify-content: space-around;
+    /* Arrange the player decks with space around them */
+    margin-bottom: 20px;
 }

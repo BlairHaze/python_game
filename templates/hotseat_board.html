@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='hotseat_style.css') }}">
     <title>Hotseat Board</title>
 </head>
 
@@ -23,33 +23,35 @@
     {% endif %}
 
     {% if game_instance %}
-    <div class="player-deck">
-        <h2>{{ game_instance.player1.name }}'s Deck:</h2>
-        <div class="card-container">
-            {% for card in game_instance.player1.deck %}
-            <div class="card" onclick="selectCard({{ loop.index0 }})">
-                <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
-                    alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
-                <div class="index-label">{{ loop.index0 }}</div>
+    <div class="players-container">
+        <div class="player-deck">
+            <h2>{{ game_instance.player1.name }}'s Deck:</h2>
+            <div class="card-container">
+                {% for card in game_instance.player1.deck %}
+                <div class="card" onclick="selectCard({{ loop.index0 }})">
+                    <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
+                        alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+                    <div class="index-label">{{ loop.index0 }}</div>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
 
-    {% if game_instance.player2 %}
-    <div class="player-deck">
-        <h2>{{ game_instance.player2.name }}'s Deck:</h2>
-        <div class="card-container">
-            {% for card in game_instance.player2.deck %}
-            <div class="card" onclick="selectCard({{ loop.index0 }})">
-                <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
-                    alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
-                <div class="index-label">{{ loop.index0 }}</div>
+        {% if game_instance.player2 %}
+        <div class="player-deck">
+            <h2>{{ game_instance.player2.name }}'s Deck:</h2>
+            <div class="card-container">
+                {% for card in game_instance.player2.deck %}
+                <div class="card" onclick="selectCard({{ loop.index0 }})">
+                    <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
+                        alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+                    <div class="index-label">{{ loop.index0 }}</div>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
+        {% endif %}
     </div>
-    {% endif %}
 
     <form method="post" action="{{ url_for('draw_cards') }}">
         <button type="submit">Draw Cards ({{ game_instance.current_player.name }})</button>
@@ -87,8 +89,6 @@
         </div>
         {% endfor %}
     </div>
-
-
     {% endif %}
 
 </body>

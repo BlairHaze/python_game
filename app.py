@@ -105,7 +105,6 @@ def put_cards_on_table():
 
     return redirect(url_for('index'))
 
-
 @app.route('/add_cards_to_stack', methods=['POST'])
 def add_cards_to_stack():
     global game_instance
@@ -134,7 +133,6 @@ def add_cards_to_stack():
         return redirect(url_for('board'))
 
     return redirect(url_for('index'))
-
 
 @app.route('/draw_cards', methods=['POST'])
 def draw_cards():
@@ -178,8 +176,6 @@ def victory():
 
     # Redirect to the index page if the game is not over
     return redirect(url_for('index'))
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

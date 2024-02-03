@@ -10,6 +10,8 @@ class Game:
     def __init__(self, player1_name=None, player2_name=None):
         self.player1 = self.create_player(player1_name) if player1_name else None
         self.player2 = self.create_player(player2_name) if player2_name else None
+        self.has_put_stack_player1 = False  # Initialize for player 1
+        self.has_put_stack_player2 = False  # Initialize for player 2
         self.general_deck = None
         self.table = []
         self.current_player = self.player1
@@ -104,12 +106,10 @@ class Game:
         else:
             self.current_player = self.player1
 
-
-# Inside the Game class in game.py
     # Inside the Game class in game.py
     def validate_combination(self, selected_cards_indices, stack_index, position):
         # Validate selected indices
-        if not all(0 <= idx < len(self.player1.deck) for idx in selected_cards_indices):
+        if not all(0 <= idx < len(self.current_player.deck) for idx in selected_cards_indices):
             return False, "Invalid card indices. Please select cards from your hand."
 
         # Validate stack index
@@ -117,7 +117,7 @@ class Game:
             return False, "Invalid stack index. Please select a valid stack."
 
         # Create a pile with selected cards from the player's hand
-        selected_pile = [self.player1.deck[idx] for idx in selected_cards_indices]
+        selected_pile = [self.current_player.deck[idx] for idx in selected_cards_indices]
 
         # Check if the ranks are sequential
         if not self.are_ranks_sequential(selected_pile):
@@ -148,39 +148,62 @@ class Game:
         return all(sorted_ranks[i] == sorted_ranks[i - 1] + 1 for i in range(1, len(sorted_ranks)))
 
 
-    # Inside the Game class in game.py
     def add_cards_to_stack(self, selected_cards_indices, stack_index):
         # Validate the combination
         first_card_rank = self.table[stack_index][0]['Value']
-        max_player_card_rank = max(self.player1.deck[idx]['Value'] for idx in selected_cards_indices)
+        max_player_card_rank = max(self.current_player.deck[idx]['Value'] for idx in selected_cards_indices)
         position = "front" if first_card_rank > max_player_card_rank else "end"
 
         success, message = self.validate_combination(selected_cards_indices, stack_index, position)
 
-        # If the combination is valid, proceed with adding cards to the stack
+        # If the combination is valid and the respective player has put a new stack, proceed with adding cards to the stack
         if success:
-            # Create a pile with selected cards from the player's hand
-            pile = [self.player1.deck[idx] for idx in selected_cards_indices]
+            if self.current_player == self.player1 and self.has_put_stack_player1:
+                # Create a pile with selected cards from the player's hand
+                pile = [self.current_player.deck[idx] for idx in selected_cards_indices]
 
-            # Sort the pile in ascending order based on card values
-            sorted_pile = sorted(pile, key=lambda x: x['Value'])
+                # Sort the pile in ascending order based on card values
+                sorted_pile = sorted(pile, key=lambda x: x['Value'])
 
-            # Add the cards to the specified position in the stack
-            if position == "front":
-                self.table[stack_index] = sorted_pile + self.table[stack_index]
-            elif position == "end":
-                self.table[stack_index] += sorted_pile
+                # Add the cards to the specified position in the stack
+                if position == "front":
+                    self.table[stack_index] = sorted_pile + self.table[stack_index]
+                elif position == "end":
+                    self.table[stack_index] += sorted_pile
 
-            # Remove the selected cards from the player's hand
-            for idx in sorted(selected_cards_indices, reverse=True):
-                del self.player1.deck[idx]
+                # Remove the selected cards from the player's hand
+                for idx in sorted(selected_cards_indices, reverse=True):
+                    del self.current_player.deck[idx]
 
-            return True, "Cards successfully added to the stack."
+                # Switch to the next player's turn
+                self.current_player = self.player2 if self.current_player == self.player1 else self.player1
 
-        # If the combination is not valid, return an error message
-        return False, message
+                return True, "Cards successfully added to the stack."
 
+            elif self.current_player == self.player2 and self.has_put_stack_player2:
+                # Create a pile with selected cards from the player's hand
+                pile = [self.current_player.deck[idx] for idx in selected_cards_indices]
 
+                # Sort the pile in ascending order based on card values
+                sorted_pile = sorted(pile, key=lambda x: x['Value'])
+
+                # Add the cards to the specified position in the stack
+                if position == "front":
+                    self.table[stack_index] = sorted_pile + self.table[stack_index]
+                elif position == "end":
+                    self.table[stack_index] += sorted_pile
+
+                # Remove the selected cards from the player's hand
+                for idx in sorted(selected_cards_indices, reverse=True):
+                    del self.current_player.deck[idx]
+
+                # Switch to the next player's turn
+                self.current_player = self.player2 if self.current_player == self.player1 else self.player1
+
+                return True, "Cards successfully added to the stack."
+
+        # If the combination is not valid or the respective player hasn't put a new stack, return an error message
+        return False, "Invalid combination of cards. Please select a valid set of cards or put a new stack first."
     
     def put_cards_on_table(self, selected_cards_indices):
             # Validate selected indices
@@ -199,6 +222,12 @@ class Game:
 
             # Append the valid pile as a separate list to the table
             self.table.append(sorted_pile)
+
+            # Set the respective player's has_put_stack to True
+            if self.current_player == self.player1:
+                self.has_put_stack_player1 = True
+            elif self.current_player == self.player2:
+                self.has_put_stack_player2 = True
 
             # Remove the selected cards from the player's hand
             for idx in sorted(selected_cards_indices, reverse=True):

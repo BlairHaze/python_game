@@ -140,18 +140,21 @@ class Game:
         if not self.is_valid(pile):
             return False, "Invalid combination of cards. Please select a valid set of cards."
 
+        # Sort the pile in ascending order based on card values
+        sorted_pile = sorted(pile, key=lambda x: x['Value'])
+
         # Append the valid pile as a separate list to the table
-        self.table.append(pile)
+        self.table.append(sorted_pile)
 
         # Remove the selected cards from the player's hand
         for idx in sorted(selected_cards_indices, reverse=True):
             del self.player1.deck[idx]
 
-        return True, "Cards successfully put on the table."          
+        return True, "Cards successfully put on the table."
+        
 
     def display_deck(self, deck):
          for card in deck:
              print(f"{card['Rank']} of {card['Suit']} (Value: {card['Value']})")
 
     
-

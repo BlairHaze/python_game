@@ -141,13 +141,42 @@ def draw_cards():
     global game_instance
 
     if game_instance:
-        game_instance.draw_cards()
+        success = game_instance.draw_cards()
+
+        if not success:
+            # If drawing cards fails, check if it's due to no more cards in the general deck
+            if game_instance.is_game_over():
+                # Redirect to the victory page
+                return redirect(url_for('victory'))
 
         if game_instance.get_game_mode() == 'hotseat':
             return redirect(url_for('hotseat_board'))
         else:
             return redirect(url_for('board'))
 
+    return redirect(url_for('index'))
+
+@app.route('/victory')
+def victory():
+    global game_instance
+
+    if game_instance and game_instance.is_game_over():
+        # Check which player has more cards and pass the corresponding winner's name to the template
+        player1_cards = len(game_instance.player1.deck) if game_instance.player1 else 0
+        player2_cards = len(game_instance.player2.deck) if game_instance.player2 else 0
+
+        if player1_cards > player2_cards:
+            winner_name = game_instance.player2.name
+        elif player2_cards > player1_cards:
+            winner_name = game_instance.player1.name
+        else:
+            # Handle a tie or any other conditions here
+            winner_name = "It's a tie!"
+
+        # Display victory page with the winner's name
+        return render_template('victory.html', winner_name=winner_name)
+
+    # Redirect to the index page if the game is not over
     return redirect(url_for('index'))
 
 

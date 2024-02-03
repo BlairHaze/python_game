@@ -14,6 +14,7 @@ class Game:
         self.table = []
         self.current_player = self.player1
 
+
     def create_player(self, name, player_class=Player):
         return player_class(name, 0)
 
@@ -46,7 +47,8 @@ class Game:
         self.player1 = self.create_player(player1_name)
         self.player2 = self.create_player(player2_name, player_class=Player2)
 
-
+    def is_game_over(self):
+        return not self.general_deck
 
     def create_player(self, name):
         return Player(name, 0)

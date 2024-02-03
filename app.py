@@ -20,6 +20,8 @@ def start_singleplayer():
 
     return render_template('singleplayer.html')
 
+###### HOTSEAT ######
+
 @app.route('/start_hotseat', methods=['GET', 'POST'])
 def start_hotseat():
     global game_instance
@@ -28,9 +30,29 @@ def start_hotseat():
         player1_name = request.form['player1_name']
         player2_name = request.form['player2_name']
         game_instance = Game(player1_name=player1_name, player2_name=player2_name)
-        return redirect(url_for('board'))
+        return redirect(url_for('hotseat_board'))
 
     return render_template('hotseat.html')
+
+@app.route('/hotseat_board')
+def hotseat_board():
+    global game_instance
+    
+    if game_instance is None:
+        return redirect(url_for('index'))
+
+    # Display the decks of both players on the web page
+    player1_deck = game_instance.player1.deck if game_instance.player1 else []
+    player2_deck = game_instance.player2.deck if game_instance.player2 else []
+
+    # Get flashed error messages
+    error_messages = get_flashed_messages(category_filter=['error'])
+
+    # Enumerate the stacks on the table and pass them to the template
+    enumerated_table = list(enumerate(game_instance.table))
+
+    return render_template('hotseat_board.html', player1_deck=player1_deck, player2_deck=player2_deck,
+                           error_messages=error_messages, game_instance=game_instance, enumerated_table=enumerated_table)
 
 @app.route('/start_online', methods=['GET', 'POST'])
 def start_online():
@@ -61,19 +83,28 @@ def board():
     
 @app.route('/put_cards_on_table', methods=['POST'])
 def put_cards_on_table():
-    # Get selected card indices from the form
-    selected_cards_indices = request.form.get('card_indices')
-    selected_cards_indices = [int(idx.strip()) for idx in selected_cards_indices.split(',')]
+    global game_instance
 
-    # Call the put_cards_on_table method in the Game class
-    success, message = game_instance.put_cards_on_table(selected_cards_indices)
+    if game_instance:
+        # Get selected card indices from the form
+        selected_cards_indices = request.form.get('card_indices')
+        selected_cards_indices = [int(idx.strip()) for idx in selected_cards_indices.split(',')]
 
-    # Flash the error message if not successful
-    if not success:
-        flash(message, 'error')
+        # Call the put_cards_on_table method in the Game class
+        success, message = game_instance.put_cards_on_table(selected_cards_indices)
 
-    # Redirect to the board
-    return redirect(url_for('board'))
+        # Flash the error message if not successful
+        if not success:
+            flash(message, 'error')
+
+        # Redirect based on the game mode
+        if game_instance.get_game_mode() == 'hotseat':
+            return redirect(url_for('hotseat_board'))
+        elif game_instance.get_game_mode() == 'singleplayer':
+            return redirect(url_for('board'))
+
+    return redirect(url_for('index'))
+
 
 @app.route('/add_cards_to_stack', methods=['POST'])
 def add_cards_to_stack():
@@ -85,7 +116,6 @@ def add_cards_to_stack():
     # Get selected card indices, stack index, and position from the form
     selected_cards_indices = request.form.get('card_indices')
     stack_index = int(request.form.get('stack_index'))
-    position = request.form.get('position')
 
     # Convert selected card indices to a list of integers
     selected_cards_indices = [int(idx.strip()) for idx in selected_cards_indices.split(',')]
@@ -93,22 +123,34 @@ def add_cards_to_stack():
     # Call the add_cards_to_stack method in the Game class
     success, message = game_instance.add_cards_to_stack(selected_cards_indices, stack_index)
 
-
     # Flash the error message if not successful
     if not success:
         flash(message, 'error')
 
-    # Redirect to the board
-    return redirect(url_for('board'))
+    # Redirect based on the game mode
+    if game_instance.get_game_mode() == 'hotseat':
+        return redirect(url_for('hotseat_board'))
+    elif game_instance.get_game_mode() == 'singleplayer':
+        return redirect(url_for('board'))
+
+    return redirect(url_for('index'))
+
 
 @app.route('/draw_cards', methods=['POST'])
 def draw_cards():
+    global game_instance
+
     if game_instance:
-        # Draw 1 card when the button is pressed
         game_instance.draw_cards()
-        return redirect(url_for('board'))
-    else:
-        return redirect(url_for('index'))
+
+        if game_instance.get_game_mode() == 'hotseat':
+            return redirect(url_for('hotseat_board'))
+        else:
+            return redirect(url_for('board'))
+
+    return redirect(url_for('index'))
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

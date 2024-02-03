@@ -87,3 +87,13 @@ body {
     max-width: 100%;
     /* Ensure images inside each pile are responsive */
 }
+
+/* Add this to your style.css or create a new style file */
+.stack-index-label {
+    background-color: #3498db;
+    /* Use your desired color */
+    color: white;
+    text-align: center;
+    padding: 5px;
+    margin-bottom: 5px;
+}

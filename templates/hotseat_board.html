@@ -1,0 +1,96 @@
+<!-- hotseat_board.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Hotseat Board</title>
+</head>
+
+<body>
+
+    <h1>Hotseat Board</h1>
+
+    {% if error_messages %}
+    <div class="error-messages">
+        {% for message in error_messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if game_instance %}
+    <div class="player-deck">
+        <h2>{{ game_instance.player1.name }}'s Deck:</h2>
+        <div class="card-container">
+            {% for card in game_instance.player1.deck %}
+            <div class="card" onclick="selectCard({{ loop.index0 }})">
+                <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
+                    alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+                <div class="index-label">{{ loop.index0 }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if game_instance.player2 %}
+    <div class="player-deck">
+        <h2>{{ game_instance.player2.name }}'s Deck:</h2>
+        <div class="card-container">
+            {% for card in game_instance.player2.deck %}
+            <div class="card" onclick="selectCard({{ loop.index0 }})">
+                <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
+                    alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+                <div class="index-label">{{ loop.index0 }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('draw_cards') }}">
+        <button type="submit">Draw Cards ({{ game_instance.current_player.name }})</button>
+    </form>
+
+    <form method="post" action="{{ url_for('put_cards_on_table') }}">
+        <label for="card_indices">Enter card indices (comma-separated): </label>
+        <input type="text" id="card_indices" name="card_indices" required>
+        <button type="submit">Put Cards on Table</button>
+    </form>
+
+    <!-- Add the section for adding cards to a stack -->
+    <form method="post" action="{{ url_for('add_cards_to_stack') }}">
+        <label for="card_indices_stack">Enter card indices (comma-separated): </label>
+        <input type="text" id="card_indices_stack" name="card_indices" required>
+
+        <label for="stack_index">Enter Stack Index:</label>
+        <input type="number" id="stack_index" name="stack_index" required>
+
+        <button type="submit">Add Cards to Stack</button>
+    </form>
+
+    <!-- Display the table with cards -->
+    <h2>Table:</h2>
+    <div class="table-container">
+        {% for stack_index, pile in enumerated_table %}
+        <div class="table-pile">
+            <div class="stack-index-label">{{ stack_index }}</div>
+            {% for card in pile %}
+            <div class="card" onclick="selectCardOnTable({{ loop.index0 }})">
+                <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
+                    alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+
+
+    {% endif %}
+
+</body>
+
+</html>

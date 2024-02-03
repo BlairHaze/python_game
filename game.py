@@ -1,12 +1,26 @@
 from player import Player
 import random
 
+class Player2(Player):
+    def __init__(self, name, score):
+        super().__init__(name, score)
+        self.deck = []
+
 class Game:
     def __init__(self, player1_name=None, player2_name=None):
         self.player1 = self.create_player(player1_name) if player1_name else None
         self.player2 = self.create_player(player2_name) if player2_name else None
         self.general_deck = None
         self.table = []
+        self.current_player = self.player1
+
+    def create_player(self, name, player_class=Player):
+        return player_class(name, 0)
+
+    def get_game_mode(self):
+        if self.player2:
+            return 'hotseat'
+        # Add conditions for other game modes if needed
 
     def create_deck(self):
         self.suits = ['hearts', 'diamonds', 'clubs', 'spades']
@@ -27,6 +41,10 @@ class Game:
                     })
 
         return self.general_deck
+    
+    def start_hotseat(self, player1_name, player2_name):
+        self.player1 = self.create_player(player1_name)
+        self.player2 = self.create_player(player2_name, player_class=Player2)
 
 
 
@@ -58,20 +76,32 @@ class Game:
         random.shuffle(self.general_deck)
     
     def draw_cards(self):
-        if not self.player1:
-            self.player1 = self.create_player("Player 1")
-        if not self.player1.deck:
+        if not self.current_player:
+            return  # No current player, do nothing
+
+        # Draw 1 card when the button is pressed
+        if not self.current_player.deck:
             # Shuffle the deck if not done already
             if not self.general_deck:
                 self.create_deck()
             self.shuffle_deck()
-            
+
             # Draw 6 cards at the beginning of the game
-            self.player1.deck = self.general_deck[:6]
+            self.current_player.deck = self.general_deck[:6]
             self.general_deck = self.general_deck[6:]
         else:
             # Draw 1 card if the deck already exists
-            self.player1.deck.append(self.general_deck.pop())
+            self.current_player.deck.append(self.general_deck.pop())
+
+        # Switch to the next player's turn
+        self.switch_to_next_player()
+
+    def switch_to_next_player(self):
+        if self.current_player == self.player1:
+            self.current_player = self.player2
+        else:
+            self.current_player = self.player1
+
 
 # Inside the Game class in game.py
     # Inside the Game class in game.py
@@ -151,28 +181,31 @@ class Game:
 
     
     def put_cards_on_table(self, selected_cards_indices):
-        # Validate selected indices
-        if not all(0 <= idx < len(self.player1.deck) for idx in selected_cards_indices):
-            return False, "Invalid card indices. Please select cards from your hand."
+            # Validate selected indices
+            if not all(0 <= idx < len(self.current_player.deck) for idx in selected_cards_indices):
+                return False, "Invalid card indices. Please select cards from your hand."
 
-        # Create a pile with selected cards
-        pile = [self.player1.deck[idx] for idx in selected_cards_indices]
+            # Create a pile with selected cards
+            pile = [self.current_player.deck[idx] for idx in selected_cards_indices]
 
-        # Check if the pile is valid using is_valid function
-        if not self.is_valid(pile):
-            return False, "Invalid combination of cards. Please select a valid set of cards."
+            # Check if the pile is valid using is_valid function
+            if not self.is_valid(pile):
+                return False, "Invalid combination of cards. Please select a valid set of cards."
 
-        # Sort the pile in ascending order based on card values
-        sorted_pile = sorted(pile, key=lambda x: x['Value'])
+            # Sort the pile in ascending order based on card values
+            sorted_pile = sorted(pile, key=lambda x: x['Value'])
 
-        # Append the valid pile as a separate list to the table
-        self.table.append(sorted_pile)
+            # Append the valid pile as a separate list to the table
+            self.table.append(sorted_pile)
 
-        # Remove the selected cards from the player's hand
-        for idx in sorted(selected_cards_indices, reverse=True):
-            del self.player1.deck[idx]
+            # Remove the selected cards from the player's hand
+            for idx in sorted(selected_cards_indices, reverse=True):
+                del self.current_player.deck[idx]
 
-        return True, "Cards successfully put on the table."
+            # Switch to the next player's turn
+            self.current_player = self.player2 if self.current_player == self.player1 else self.player1
+
+            return True, "Cards successfully put on the table."
         
 
     def display_deck(self, deck):

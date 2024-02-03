@@ -73,6 +73,7 @@ class Game:
             # Draw 1 card if the deck already exists
             self.player1.deck.append(self.general_deck.pop())
 
+# Inside the Game class in game.py
     # Inside the Game class in game.py
     def validate_combination(self, selected_cards_indices, stack_index, position):
         # Validate selected indices
@@ -85,6 +86,10 @@ class Game:
 
         # Create a pile with selected cards from the player's hand
         selected_pile = [self.player1.deck[idx] for idx in selected_cards_indices]
+
+        # Check if the ranks are sequential
+        if not self.are_ranks_sequential(selected_pile):
+            return False, "Invalid combination of cards. Please select a valid set of sequential cards."
 
         # Create a temporary deck for validation
         temp_deck = self.table[stack_index].copy()
@@ -104,6 +109,14 @@ class Game:
         return True, "Combination is valid."
 
     # Inside the Game class in game.py
+    def are_ranks_sequential(self, pile):
+        sorted_ranks = sorted(card['Value'] for card in pile)
+
+        # Check if the ranks are sequential
+        return all(sorted_ranks[i] == sorted_ranks[i - 1] + 1 for i in range(1, len(sorted_ranks)))
+
+
+    # Inside the Game class in game.py
     def add_cards_to_stack(self, selected_cards_indices, stack_index):
         # Validate the combination
         first_card_rank = self.table[stack_index][0]['Value']
@@ -117,11 +130,14 @@ class Game:
             # Create a pile with selected cards from the player's hand
             pile = [self.player1.deck[idx] for idx in selected_cards_indices]
 
+            # Sort the pile in ascending order based on card values
+            sorted_pile = sorted(pile, key=lambda x: x['Value'])
+
             # Add the cards to the specified position in the stack
             if position == "front":
-                self.table[stack_index] = pile + self.table[stack_index]
+                self.table[stack_index] = sorted_pile + self.table[stack_index]
             elif position == "end":
-                self.table[stack_index] += pile
+                self.table[stack_index] += sorted_pile
 
             # Remove the selected cards from the player's hand
             for idx in sorted(selected_cards_indices, reverse=True):
@@ -131,6 +147,7 @@ class Game:
 
         # If the combination is not valid, return an error message
         return False, message
+
 
     
     def put_cards_on_table(self, selected_cards_indices):

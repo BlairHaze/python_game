@@ -12,10 +12,10 @@
 
     {% if winner_name != "It's a tie!" %}
     <h1>Congratulations, {{ winner_name }}!</h1>
-    <p>You won!</p>
+    <h2>You won!</h2>
     {% else %}
     <h1>{{ winner_name }}</h1>
-    <p>Both players have the same number of cards.</p>
+    <h2>Both players have the same number of cards.</h2>
     {% endif %}
 
     <form action="{{ url_for('index') }}" method="get">

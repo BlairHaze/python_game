@@ -9,24 +9,40 @@ game_instance = None  # Will be initialized when starting the game
 def index():
     return render_template('index.html')
 
-@app.route('/start_game', methods=['POST'])
-def start_game():
+@app.route('/start_singleplayer', methods=['GET', 'POST'])
+def start_singleplayer():
     global game_instance
 
-    game_type = request.form['game_type']
-
-    if game_type == 'singleplayer':
+    if request.method == 'POST':
         player_name = request.form['player_name']
         game_instance = Game(player1_name=player_name)
-    elif game_type == 'hotseat':
+        return redirect(url_for('board'))
+
+    return render_template('singleplayer.html')
+
+@app.route('/start_hotseat', methods=['GET', 'POST'])
+def start_hotseat():
+    global game_instance
+
+    if request.method == 'POST':
         player1_name = request.form['player1_name']
         player2_name = request.form['player2_name']
         game_instance = Game(player1_name=player1_name, player2_name=player2_name)
-    elif game_type == 'online':
-        # Handle online game initialization here if needed
-        pass
+        return redirect(url_for('board'))
 
-    return redirect(url_for('board'))
+    return render_template('hotseat.html')
+
+@app.route('/start_online', methods=['GET', 'POST'])
+def start_online():
+    global game_instance
+
+    if request.method == 'POST':
+        player_name = request.form['player_name']
+        # Handle online game initialization here if needed
+        game_instance = Game(player1_name=player_name)
+        return redirect(url_for('board'))
+
+    return render_template('online.html')
 
 @app.route('/board')
 def board():

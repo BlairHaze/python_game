@@ -75,7 +75,8 @@ def add_cards_to_stack():
     selected_cards_indices = [int(idx.strip()) for idx in selected_cards_indices.split(',')]
 
     # Call the add_cards_to_stack method in the Game class
-    success, message = game_instance.add_cards_to_stack(selected_cards_indices, stack_index, position)
+    success, message = game_instance.add_cards_to_stack(selected_cards_indices, stack_index)
+
 
     # Flash the error message if not successful
     if not success:

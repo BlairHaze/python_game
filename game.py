@@ -73,6 +73,7 @@ class Game:
             # Draw 1 card if the deck already exists
             self.player1.deck.append(self.general_deck.pop())
 
+    # Inside the Game class in game.py
     def validate_combination(self, selected_cards_indices, stack_index, position):
         # Validate selected indices
         if not all(0 <= idx < len(self.player1.deck) for idx in selected_cards_indices):
@@ -102,9 +103,13 @@ class Game:
 
         return True, "Combination is valid."
 
-
-    def add_cards_to_stack(self, selected_cards_indices, stack_index, position):
+    # Inside the Game class in game.py
+    def add_cards_to_stack(self, selected_cards_indices, stack_index):
         # Validate the combination
+        first_card_rank = self.table[stack_index][0]['Value']
+        max_player_card_rank = max(self.player1.deck[idx]['Value'] for idx in selected_cards_indices)
+        position = "front" if first_card_rank > max_player_card_rank else "end"
+
         success, message = self.validate_combination(selected_cards_indices, stack_index, position)
 
         # If the combination is valid, proceed with adding cards to the stack

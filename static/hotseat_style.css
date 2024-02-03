@@ -15,6 +15,10 @@ body {
     border: 1px solid #ccc;
     padding: 20px 10px;
     position: relative;
+    background: linear-gradient(to bottom, rgba(180, 30, 30, 0.9), rgba(180, 30, 30, 0.4));
+    /* Adjust color and transparency as needed */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    /* Add a subtle box shadow */
 }
 
 .card {
@@ -70,21 +74,33 @@ body {
     order: -1;
 }
 
-/* New styles for the table display */
 .table-container {
     margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    /* Center the table sets */
+    max-width: 800px;
+    /* Set a max-width for the table container */
+    margin: 0 auto;
+    background: linear-gradient(to bottom, rgba(64, 128, 89, 0.9), rgba(64, 128, 89, 0.4));
+    /* Adjust color and transparency as needed */
+    border: 1px solid #ccc;
+    /* Add a border to the table container */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    /* Add a subtle box shadow */
 }
 
 .table-pile {
     margin: 10px;
     padding: 10px;
-    border: 2px solid #000;
+    border: 2px solid #ccc;
     max-width: 100px;
     /* Set max width for each pile */
+    box-sizing: border-box;
+    /* Include padding and border in the total width/height */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .table-pile img {
@@ -92,7 +108,6 @@ body {
     /* Ensure images inside each pile are responsive */
 }
 
-/* Add this to your style.css or create a new style file */
 .stack-index-label {
     background-color: #3498db;
     /* Use your desired color */

@@ -53,6 +53,23 @@
         {% endif %}
     </div>
 
+    <!-- Display the table with cards -->
+    <h2>Table:</h2>
+    <div class="table-container">
+        {% for stack_index, pile in enumerated_table %}
+        <div class="table-pile">
+            <div class="stack-index-label">{{ stack_index }}</div>
+            {% for card in pile %}
+            <div class="card" onclick="selectCardOnTable({{ loop.index0 }})">
+                <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
+                    alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <form method="post" action="{{ url_for('draw_cards') }}">
         <button type="submit">Draw Cards ({{ game_instance.current_player.name }})</button>
     </form>
@@ -73,23 +90,6 @@
 
         <button type="submit">Add Cards to Stack</button>
     </form>
-
-    <!-- Display the table with cards -->
-    <h2>Table:</h2>
-    <div class="table-container">
-        {% for stack_index, pile in enumerated_table %}
-        <div class="table-pile">
-            <div class="stack-index-label">{{ stack_index }}</div>
-            {% for card in pile %}
-            <div class="card" onclick="selectCardOnTable({{ loop.index0 }})">
-                <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
-                    alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
-            </div>
-            {% endfor %}
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
 
 </body>
 

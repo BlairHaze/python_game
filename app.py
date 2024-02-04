@@ -15,7 +15,7 @@ def start_singleplayer():
 
     if request.method == 'POST':
         player_name = request.form['player_name']
-        game_instance = Game(player1_name=player_name)
+        game_instance = Game(player1_name=player_name, player2_name='Computer')
         return redirect(url_for('board'))
 
     return render_template('singleplayer.html')
@@ -79,7 +79,9 @@ def board():
     # Get flashed error messages
     error_messages = get_flashed_messages(category_filter=['error'])
 
-    return render_template('board.html', player_deck=player_deck, error_messages=error_messages, game_instance=game_instance)
+    valid_combinations = game_instance.find_all_valid_combinations()
+
+    return render_template('board.html', player_deck=player_deck, error_messages=error_messages, game_instance=game_instance, valid_combinations=valid_combinations)
     
 @app.route('/put_cards_on_table', methods=['POST'])
 def put_cards_on_table():
@@ -149,7 +151,7 @@ def draw_cards():
 
         if game_instance.get_game_mode() == 'hotseat':
             return redirect(url_for('hotseat_board'))
-        else:
+        elif game_instance.get_game_mode() == 'singleplayer':
             return redirect(url_for('board'))
 
     return redirect(url_for('index'))
@@ -159,17 +161,23 @@ def victory():
     global game_instance
 
     if game_instance and game_instance.is_game_over():
-        # Check which player has more cards and pass the corresponding winner's name to the template
-        player1_cards = len(game_instance.player1.deck) if game_instance.player1 else 0
-        player2_cards = len(game_instance.player2.deck) if game_instance.player2 else 0
+        # Check if both players drew cards
+        if game_instance.both_players_drew_cards:
+            # Check which player has more cards and pass the corresponding winner's name to the template
+            player1_cards = len(game_instance.player1.deck) if game_instance.player1 else 0
+            player2_cards = len(game_instance.player2.deck) if game_instance.player2 else 0
 
-        if player1_cards > player2_cards:
-            winner_name = game_instance.player2.name
-        elif player2_cards > player1_cards:
-            winner_name = game_instance.player1.name
+            if player1_cards > player2_cards:
+                winner_name = game_instance.player2.name
+            elif player2_cards > player1_cards:
+                winner_name = game_instance.player1.name
+            else:
+                # Handle a tie or any other conditions here
+                winner_name = "It's a tie!"
+
         else:
-            # Handle a tie or any other conditions here
-            winner_name = "It's a tie!"
+            # Determine the winner based on the remaining cards if both players haven't drawn cards
+            winner_name = game_instance.player1.name if not game_instance.player1.deck else game_instance.player2.name
 
         # Display victory page with the winner's name
         return render_template('victory.html', winner_name=winner_name)

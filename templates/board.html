@@ -1,4 +1,4 @@
-<!-- board.html -->
+<!-- hotseat_board.html -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,79 +6,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Machiavelli</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='hotseat_style.css') }}">
+    <title>Singleplayer Board</title>
 </head>
 
 <body>
-    <h1>Machiavelli</h1>
 
-    <h2>Player's Deck:</h2>
-    <div class="card-container">
-        {% set cards_per_row = 6 %}
-        {% for card in player_deck %}
-        <div class="card" onclick="selectCard({{ loop.index0 }})">
-            <!-- Assuming you have card images named 'rank_suit.png' in your static folder -->
-            <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
-                alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
-            <div class="index-label">{{ loop.index0 }}</div> <!-- Adjusted index display -->
-        </div>
-        {% if loop.index % cards_per_row == 0 %}
-        <div class="clear"></div>
-        {% endif %}
+    <h1>Singleplayer Board - {{ game_instance.current_player.name }}'s turn</h1>
+
+    {% if error_messages %}
+    <div class="error-messages">
+        {% for message in error_messages %}
+        <p>{{ message }}</p>
         {% endfor %}
     </div>
+    {% endif %}
 
-    <!-- Add a button to draw cards -->
-    <form action="{{ url_for('draw_cards') }}" method="post">
-        <input type="submit" value="Draw Cards">
-    </form>
+    {% if game_instance %}
 
-    <!-- Section to input a set of cards to put on the table -->
-    <div>
-        <form action="{{ url_for('put_cards_on_table') }}" method="post">
-            <label for="card_indices">Enter Card Indices (comma-separated):</label>
-            <input type="text" id="card_indices" name="card_indices" required>
-            <input type="submit" value="Submit Set">
-        </form>
+    <div class="players-container">
+        <div class="player-deck">
+            <h3>{{ game_instance.player1.name }}'s Deck:</h3>
+            <div class="card-container">
+                {% for card in game_instance.player1.deck %}
+                <div class="card" onclick="selectCard({{ loop.index0 }})">
+                    <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
+                        alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+                    <div class="index-label">{{ loop.index0 }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if game_instance.player2 %}
+        <div class="player-deck">
+            <h3>{{ game_instance.player2.name }}'s Deck:</h3>
+            <div class="card-container">
+                {% for card in game_instance.player2.deck %}
+                <div class="card" onclick="selectCard({{ loop.index0 }})">
+                    <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
+                        alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+                    <div class="index-label">{{ loop.index0 }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
     </div>
-
-    <!-- Section to input cards into an existing stack on the table -->
-    <div>
-        <form action="{{ url_for('add_cards_to_stack') }}" method="post">
-            <label for="card_indices">Enter Card Indices (comma-separated):</label>
-            <input type="text" id="card_indices" name="card_indices" required>
-
-            <label for="stack_index">Enter Stack Index:</label>
-            <input type="number" id="stack_index" name="stack_index" required>
-
-            <input type="submit" value="Submit Cards to Stack">
-        </form>
-    </div>
-
-
 
     <!-- Display the table with cards -->
     <h2>Table:</h2>
     <div class="table-container">
-        {% for pile in game_instance.table %}
+        {% for stack_index, pile in enumerated_table %}
         <div class="table-pile">
+            <div class="stack-index-label">{{ stack_index }}</div>
             {% for card in pile %}
-            <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
-                alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+            <div class="card" onclick="selectCardOnTable({{ loop.index0 }})">
+                <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
+                    alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('draw_cards') }}">
+        <button type="submit">Draw Cards</button>
+    </form>
+
+    <form method="post" action="{{ url_for('put_cards_on_table') }}">
+        <label for="card_indices">Enter card indices (comma-separated): </label>
+        <input type="text" id="card_indices" name="card_indices" required>
+        <button type="submit">Put Cards on Table</button>
+    </form>
+
+    <!-- Add the section for adding cards to a stack -->
+    <form method="post" action="{{ url_for('add_cards_to_stack') }}">
+        <label for="card_indices_stack">Enter card indices (comma-separated): </label>
+        <input type="text" id="card_indices_stack" name="card_indices" required>
+
+        <label for="stack_index">Enter Stack Index:</label>
+        <input type="number" id="stack_index" name="stack_index" required>
+
+        <button type="submit">Add Cards to Stack</button>
+    </form>
+
+    <!-- Display the valid combinations -->
+    <h2>Valid Combinations:</h2>
+    <div class="valid-combinations-container">
+        {% for combination in valid_combinations %}
+        <div class="valid-combination">
+            {% for index in combination %}
+            {{ index }}{% if not loop.last %}, {% endif %}
             {% endfor %}
         </div>
         {% endfor %}
     </div>
 
-    <!-- Add more game-related content or controls as needed -->
-    {% if error_messages %}
-    <div class="error-messages">
-        {% for error_message in error_messages %}
-        <p>{{ error_message }}</p>
-        {% endfor %}
-    </div>
-    {% endif %}
+
+
 
 </body>
 

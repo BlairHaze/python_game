@@ -204,3 +204,10 @@ input[type="submit"]:hover {
     /* Arrange the player decks with space around them */
     margin-bottom: 20px;
 }
+
+.error-messages {
+    color: red;
+    margin-top: 10px;
+    font-weight: bold;
+    /* Make the error messages bolder */
+}

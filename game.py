@@ -1,7 +1,12 @@
 from player import Player
 import random
+import itertools
 
 class Player2(Player):
+    def __init__(self, name, score):
+        super().__init__(name, score)
+        self.deck = []
+class Computer(Player):
     def __init__(self, name, score):
         super().__init__(name, score)
         self.deck = []
@@ -21,9 +26,10 @@ class Game:
         return player_class(name, 0)
 
     def get_game_mode(self):
-        if self.player2:
+        if self.player2 and self.player2.name == 'Computer':
+            return 'singleplayer'
+        elif self.player2_name:
             return 'hotseat'
-        # Add conditions for other game modes if needed
 
     def create_deck(self):
         self.suits = ['hearts', 'diamonds', 'clubs', 'spades']
@@ -48,6 +54,28 @@ class Game:
     def start_hotseat(self, player1_name, player2_name):
         self.player1 = self.create_player(player1_name)
         self.player2 = self.create_player(player2_name, player_class=Player2)
+    
+    def start_singleplayer(self, player_name):
+        self.player1 = self.create_player(player_name)
+        self.player2 = self.create_player("Computer", player_class=Player2)
+
+    def find_valid_combinations(self, player_deck):
+        valid_combinations = []
+
+        for stack_index, stack in enumerate(self.table):
+            for i in range(len(player_deck)):
+                for j in range(i + 2, len(player_deck) + 1):
+                    selected_cards_indices = list(range(i, j))
+                    temp_deck = stack + [player_deck[idx] for idx in selected_cards_indices]
+
+                    if self.is_valid(temp_deck, allow_single=True):
+                        valid_combinations.append({
+                            'indices': selected_cards_indices,
+                            'stack_index': stack_index
+                        })
+
+        return valid_combinations
+
 
     def is_game_over(self):
         return not self.general_deck
@@ -99,6 +127,20 @@ class Game:
 
         # Switch to the next player's turn
         self.switch_to_next_player()
+
+        if self.current_player.name == "Computer":
+            self.draw_cards_for_computer()
+
+    def draw_cards_for_computer(self):
+        if not self.current_player.deck:
+            self.current_player.deck = self.general_deck[:6]
+            self.general_deck = self.general_deck[6:]
+        else:
+            self.current_player.deck.append(self.general_deck.pop())
+        
+        self.switch_to_next_player()
+
+        
 
     def switch_to_next_player(self):
         if self.current_player == self.player1:
@@ -242,5 +284,29 @@ class Game:
     def display_deck(self, deck):
          for card in deck:
              print(f"{card['Rank']} of {card['Suit']} (Value: {card['Value']})")
+
+    def find_all_valid_combinations(self):
+        all_combinations = []
+
+        # Iterate over all possible combinations of indices
+        for r in range(3, len(self.current_player.deck) + 1):
+            for indices in itertools.combinations(range(len(self.current_player.deck)), r):
+                # Create a pile with selected cards
+                pile = [self.current_player.deck[idx] for idx in indices]
+
+                # Check if the pile is valid using is_valid function
+                if self.is_valid(pile, allow_single=True):
+                    # Sort the pile in ascending order based on card values
+                    sorted_pile = sorted(pile, key=lambda x: x['Value'])
+
+                    # Append the valid pile to the list of all combinations
+                    all_combinations.append(sorted_pile)
+
+        return all_combinations
+
+
+
+
+  
 
     

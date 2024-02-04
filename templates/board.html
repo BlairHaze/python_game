@@ -93,14 +93,14 @@
     </form>
 
     {% if find_table_stack %}
-    <h2>First Valid Combination:</h2>
+    <h2>Extended Valid Combination:</h2>
     <div class="valid-combination-container">
-        {% for card in find_table_stack %}
-        <div class="card">
-            <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
-                alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
-        </div>
-        {% endfor %}
+        <p>Indices of cards in the extended valid combination:</p>
+        <ul>
+            {% for card_index in find_table_stack %}
+            <li>{{ card_index }}</li>
+            {% endfor %}
+        </ul>
     </div>
     {% endif %}
 

@@ -17,7 +17,8 @@ class Game:
         self.player2 = self.create_player(player2_name) if player2_name else None
         self.both_players_drew_cards = False  # Variable to track if both players have drawn cards
         self.has_put_stack_player1 = False  # Initialize for player 1
-        self.has_put_stack_player2 = False  # Initialize for player 2
+        self.has_put_stack_player2 = False  
+        self.which_stack = None# Initialize for player 2
         self.general_deck = None
         self.table = []
         self.current_player = self.player1
@@ -105,6 +106,28 @@ class Game:
 
         return False
     
+    def is_valid_any_size(self, pile):
+        num_cards = len(pile)
+
+        if num_cards < 2:
+            return False
+
+        suits_set = set(card['Suit'] for card in pile)
+        values_set = set(card['Value'] for card in pile)
+
+        # Check for cards with the same rank but different suits
+        if len(suits_set) == num_cards and len(values_set) == 1:
+            return True
+
+        # Check for consecutive cards with the same suit
+        if len(suits_set) == 1 and len(values_set) == num_cards:
+            sorted_values = sorted(values_set)
+            if all(value in sorted_values for value in range(sorted_values[0], sorted_values[-1] + 1)):
+                return True
+
+        return False
+
+    
     def shuffle_deck(self):
         random.shuffle(self.general_deck)
     
@@ -141,6 +164,7 @@ class Game:
             self.current_player.deck = self.general_deck[:6]
             self.general_deck = self.general_deck[6:]
         else:
+
             first_valid_combination = self.find_first_valid_combination()
             if first_valid_combination:
                 # Put the cards on the table using put_cards_on_table method
@@ -155,6 +179,7 @@ class Game:
             self.both_players_drew_cards = True
         
         self.switch_to_next_player()
+
 
         
 
@@ -331,8 +356,8 @@ class Game:
     def find_table_stack(self):
         # Iterate through individual stacks on the table
         for table_stack in self.table:
-            # Iterate over all possible combinations of card from player's hand
-            for card in self.current_player.deck:
+            # Iterate over all possible combinations of card indices from player's hand
+            for card_index, card in enumerate(self.current_player.deck):
                 # Create a temporary stack with the card from player's hand and the current table stack
                 temp_stack = table_stack + [card]
 
@@ -341,9 +366,22 @@ class Game:
 
                 # Check if the sorted stack is valid using your is_valid function
                 if self.is_valid(sorted_stack):
-                    return sorted_stack  # Return the first valid combination found
+                    valid_indices = [card_index]  # Store the index of the initial card
+
+                    # If the initial combination is valid, iterate through the rest of player's hand
+                    for additional_card_index, additional_card in enumerate(self.current_player.deck):
+                        # Check if adding another card from the player's hand keeps the combination valid
+                        extended_stack = sorted_stack + [additional_card]
+                        extended_stack = sorted(extended_stack, key=lambda x: x['Value'])
+
+                        if self.is_valid(extended_stack):
+                            valid_indices.append(additional_card_index)  # Store the index of the additional card
+
+                    return valid_indices  # Return the indices of all cards that form a valid combination
 
         return None  # Return None if no valid combination is found
+
+
     
 
     

@@ -1,7 +1,6 @@
 body {
     text-align: center;
     background-color: #f4f4f4;
-    /* Set a light background color */
 }
 
 .card-container {
@@ -17,7 +16,6 @@ body {
 
 .card {
     width: 100px;
-    /* Set a fixed width for each card */
     margin: 5px;
     text-align: center;
     position: relative;
@@ -52,7 +50,6 @@ body {
     clear: both;
 }
 
-/* Remove the extra spacing between rows */
 .card-container::after {
     content: "";
     flex-basis: 100%;
@@ -60,7 +57,6 @@ body {
     order: 1;
 }
 
-/* Remove the space at the top */
 .card-container::before {
     content: "";
     flex-basis: 100%;
@@ -68,13 +64,11 @@ body {
     order: -1;
 }
 
-/* New styles for the table display */
 .table-container {
     margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    /* Center the table sets */
 }
 
 .table-pile {
@@ -82,18 +76,14 @@ body {
     padding: 10px;
     border: 2px solid #000;
     max-width: 100px;
-    /* Set max width for each pile */
 }
 
 .table-pile img {
     max-width: 100%;
-    /* Ensure images inside each pile are responsive */
 }
 
-/* Add this to your style.css or create a new style file */
 .stack-index-label {
     background-color: #3498db;
-    /* Use your desired color */
     color: white;
     text-align: center;
     padding: 5px;
@@ -102,7 +92,6 @@ body {
 
 h1 {
     color: #3498db;
-    /* Set a color for the title */
     font-size: 36px;
     margin-bottom: 20px;
 }
@@ -123,43 +112,36 @@ ol {
     max-width: 600px;
     margin: 0 auto 20px;
     counter-reset: item;
-    /* Reset the counter for ordered lists */
 }
 
 a {
     display: inline-block;
     padding: 10px 20px;
-    /* Adjusted padding for the link rectangles */
     text-decoration: none;
     font-weight: bold;
     color: #fff;
     background-color: #3498db;
-    /* Use your desired color */
     border-radius: 10px;
     transition: background-color 0.3s ease;
 }
 
 a:hover {
     background-color: #2074a0;
-    /* Use a slightly darker shade for hover effect */
 }
 
 form {
     max-width: 300px;
     margin: 0 auto;
     background-color: #fff;
-    /* Set a white background for the form */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    /* Add a subtle box shadow for a softer appearance */
 }
 
 label {
     display: block;
     margin-bottom: 10px;
     color: #555;
-    /* Set a color for labels */
 }
 
 input[type="text"] {
@@ -167,7 +149,6 @@ input[type="text"] {
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
-    /* Add a light border */
     border-radius: 5px;
     box-sizing: border-box;
 }
@@ -176,7 +157,6 @@ input[type="submit"] {
     width: 100%;
     padding: 12px;
     background-color: #3498db;
-    /* Set a colorful background for the button */
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -188,9 +168,7 @@ button,
 input[type="submit"] {
     padding: 12px 20px;
     background-color: #3498db;
-    /* Set your desired background color */
     color: #fff;
-    /* Set your desired text color */
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -199,7 +177,6 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: #2074a0;
-    /* Use a slightly darker shade for hover effect */
 }
 
 ol li:before {
@@ -211,7 +188,6 @@ ol li:before {
     transform: translateY(-50%);
     font-weight: bold;
     color: #3498db;
-    /* Set a color for the list numbers */
 }
 
 p {
@@ -224,15 +200,9 @@ p {
 ul li a {
     display: block;
     max-width: 150px;
-    /* Adjust the max-width to your preference */
     margin: 0 auto;
-    /* Center the button within the available width */
     text-align: center;
-    /* Center the text within the button */
     white-space: nowrap;
-    /* Prevent the text from wrapping */
     overflow: hidden;
-    /* Hide any overflow if the text is too long */
     text-overflow: ellipsis;
-    /* Display ellipsis (...) for overflow */
 }

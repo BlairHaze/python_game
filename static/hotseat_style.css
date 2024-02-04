@@ -1,9 +1,6 @@
-/* Add this to your style.css or create a new style file */
-
 body {
     text-align: center;
     background-color: #f4f4f4;
-    /* Set a light background color */
 }
 
 .card-container {
@@ -18,12 +15,10 @@ body {
     background: linear-gradient(to bottom, rgba(180, 30, 30, 0.9), rgba(180, 30, 30, 0.4));
     /* Adjust color and transparency as needed */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    /* Add a subtle box shadow */
 }
 
 .card {
     width: 100px;
-    /* Set a fixed width for each card */
     margin: 5px;
     text-align: center;
     position: relative;
@@ -58,7 +53,6 @@ body {
     clear: both;
 }
 
-/* Remove the extra spacing between rows */
 .card-container::after {
     content: "";
     flex-basis: 100%;
@@ -66,7 +60,6 @@ body {
     order: 1;
 }
 
-/* Remove the space at the top */
 .card-container::before {
     content: "";
     flex-basis: 100%;
@@ -80,14 +73,10 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     max-width: 800px;
-    /* Set a max-width for the table container */
     margin: 0 auto;
     background: linear-gradient(to bottom, rgba(64, 128, 89, 0.9), rgba(64, 128, 89, 0.4));
-    /* Adjust color and transparency as needed */
     border: 1px solid #ccc;
-    /* Add a border to the table container */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    /* Add a subtle box shadow */
 }
 
 .table-pile {
@@ -95,9 +84,7 @@ body {
     padding: 10px;
     border: 2px solid #ccc;
     max-width: 100px;
-    /* Set max width for each pile */
     box-sizing: border-box;
-    /* Include padding and border in the total width/height */
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -105,12 +92,10 @@ body {
 
 .table-pile img {
     max-width: 100%;
-    /* Ensure images inside each pile are responsive */
 }
 
 .stack-index-label {
     background-color: #3498db;
-    /* Use your desired color */
     color: white;
     text-align: center;
     padding: 5px;
@@ -119,7 +104,6 @@ body {
 
 h1 {
     color: #3498db;
-    /* Set a color for the title */
     font-size: 36px;
     margin-bottom: 20px;
 }
@@ -136,38 +120,31 @@ li {
 a {
     display: inline-block;
     padding: 10px 20px;
-    /* Adjusted padding for the link rectangles */
     text-decoration: none;
     font-weight: bold;
     color: #fff;
     background-color: #3498db;
-    /* Use your desired color */
     border-radius: 10px;
     transition: background-color 0.3s ease;
 }
 
 a:hover {
     background-color: #2074a0;
-    /* Use a slightly darker shade for hover effect */
 }
 
 form {
     max-width: 300px;
     margin: 20px auto;
-    /* Increased margin for more space */
     background-color: #fff;
-    /* Set a white background for the form */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    /* Add a subtle box shadow for a softer appearance */
 }
 
 label {
     display: block;
     margin-bottom: 10px;
     color: #555;
-    /* Set a color for labels */
 }
 
 input[type="text"],
@@ -176,7 +153,6 @@ input[type="number"] {
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
-    /* Add a light border */
     border-radius: 5px;
     box-sizing: border-box;
 }
@@ -185,7 +161,6 @@ input[type="submit"] {
     width: 100%;
     padding: 12px;
     background-color: #3498db;
-    /* Set a colorful background for the button */
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -195,13 +170,11 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: #2074a0;
-    /* Use a slightly darker shade for hover effect */
 }
 
 .players-container {
     display: flex;
     justify-content: space-around;
-    /* Arrange the player decks with space around them */
     margin-bottom: 20px;
 }
 
@@ -209,16 +182,13 @@ input[type="submit"]:hover {
     color: red;
     margin-top: 10px;
     font-weight: bold;
-    /* Make the error messages bolder */
 }
 
 button,
 input[type="submit"] {
     padding: 12px 20px;
     background-color: #3498db;
-    /* Set your desired background color */
     color: #fff;
-    /* Set your desired text color */
     border: none;
     border-radius: 5px;
     cursor: pointer;

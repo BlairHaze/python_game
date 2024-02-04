@@ -92,21 +92,6 @@
         <button type="submit">Add Cards to Stack</button>
     </form>
 
-    <!-- Display the valid combinations -->
-    <h2>Valid Combinations:</h2>
-    <div class="valid-combinations-container">
-        {% for combination in valid_combinations %}
-        <div class="valid-combination">
-            {% for index in combination %}
-            {{ index }}{% if not loop.last %}, {% endif %}
-            {% endfor %}
-        </div>
-        {% endfor %}
-    </div>
-
-
-
-
 </body>
 
 </html>

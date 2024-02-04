@@ -15,6 +15,7 @@ class Game:
     def __init__(self, player1_name=None, player2_name=None):
         self.player1 = self.create_player(player1_name) if player1_name else None
         self.player2 = self.create_player(player2_name) if player2_name else None
+        self.both_players_drew_cards = False  # Variable to track if both players have drawn cards
         self.has_put_stack_player1 = False  # Initialize for player 1
         self.has_put_stack_player2 = False  # Initialize for player 2
         self.general_deck = None
@@ -28,7 +29,7 @@ class Game:
     def get_game_mode(self):
         if self.player2 and self.player2.name == 'Computer':
             return 'singleplayer'
-        elif self.player2_name:
+        elif self.player2.name:
             return 'hotseat'
 
     def create_deck(self):
@@ -125,6 +126,10 @@ class Game:
             # Draw 1 card if the deck already exists
             self.current_player.deck.append(self.general_deck.pop())
 
+                # Check if both players have drawn their cards
+        if all(player.deck for player in [self.player1, self.player2]):
+            self.both_players_drew_cards = True
+
         # Switch to the next player's turn
         self.switch_to_next_player()
 
@@ -136,7 +141,18 @@ class Game:
             self.current_player.deck = self.general_deck[:6]
             self.general_deck = self.general_deck[6:]
         else:
+            first_valid_combination = self.find_first_valid_combination()
+            if first_valid_combination:
+                # Put the cards on the table using put_cards_on_table method
+                selected_indices = [self.current_player.deck.index(card) for card in first_valid_combination]
+                success, message = self.put_cards_on_table(selected_indices)
+                if success:
+                    return  # Cards successfully put on the table, no need to draw cards for the computer
             self.current_player.deck.append(self.general_deck.pop())
+        
+                # Check if both players have drawn their cards
+        if all(player.deck for player in [self.player1, self.player2]):
+            self.both_players_drew_cards = True
         
         self.switch_to_next_player()
 
@@ -191,8 +207,12 @@ class Game:
 
 
     def add_cards_to_stack(self, selected_cards_indices, stack_index):
+        if not (0 <= stack_index < len(self.table)):
+            return False, f"Invalid stack index. Please provide a stack index between 0 and {len(self.table) - 1}."
         # Validate the combination
         first_card_rank = self.table[stack_index][0]['Value']
+        if not selected_cards_indices:
+            return False, "No cards selected. Please select cards to add to the stack."
         max_player_card_rank = max(self.current_player.deck[idx]['Value'] for idx in selected_cards_indices)
         position = "front" if first_card_rank > max_player_card_rank else "end"
 
@@ -219,6 +239,9 @@ class Game:
 
                 # Switch to the next player's turn
                 self.current_player = self.player2 if self.current_player == self.player1 else self.player1
+
+                if self.current_player == self.player2 and self.player2.name == "Computer":
+                    self.draw_cards_for_computer()
 
                 return True, "Cards successfully added to the stack."
 
@@ -278,6 +301,9 @@ class Game:
             # Switch to the next player's turn
             self.current_player = self.player2 if self.current_player == self.player1 else self.player1
 
+            if self.current_player == self.player2 and self.player2.name == "Computer":
+                self.draw_cards_for_computer()
+
             return True, "Cards successfully put on the table."
         
 
@@ -285,9 +311,9 @@ class Game:
          for card in deck:
              print(f"{card['Rank']} of {card['Suit']} (Value: {card['Value']})")
 
-    def find_all_valid_combinations(self):
-        all_combinations = []
-
+    def find_first_valid_combination(self):
+        if self.current_player == self.player1 and self.player2.name != "Computer":
+            return None
         # Iterate over all possible combinations of indices
         for r in range(3, len(self.current_player.deck) + 1):
             for indices in itertools.combinations(range(len(self.current_player.deck)), r):
@@ -298,11 +324,10 @@ class Game:
                 if self.is_valid(pile, allow_single=True):
                     # Sort the pile in ascending order based on card values
                     sorted_pile = sorted(pile, key=lambda x: x['Value'])
+                    return sorted_pile  # Return the first valid combination found
 
-                    # Append the valid pile to the list of all combinations
-                    all_combinations.append(sorted_pile)
+        return None  # Return None if no valid combination is found
 
-        return all_combinations
 
 
 

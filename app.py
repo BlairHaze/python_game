@@ -79,9 +79,12 @@ def board():
     # Get flashed error messages
     error_messages = get_flashed_messages(category_filter=['error'])
 
-    valid_combinations = game_instance.find_all_valid_combinations()
+        # Enumerate the stacks on the table and pass them to the template
+    enumerated_table = list(enumerate(game_instance.table))
 
-    return render_template('board.html', player_deck=player_deck, error_messages=error_messages, game_instance=game_instance, valid_combinations=valid_combinations)
+    first_valid_combination = game_instance.find_first_valid_combination()
+
+    return render_template('board.html', player_deck=player_deck, error_messages=error_messages, game_instance=game_instance, enumerated_table=enumerated_table, first_valid_combination=first_valid_combination)
     
 @app.route('/put_cards_on_table', methods=['POST'])
 def put_cards_on_table():
@@ -90,7 +93,7 @@ def put_cards_on_table():
     if game_instance:
         # Get selected card indices from the form
         selected_cards_indices = request.form.get('card_indices')
-        selected_cards_indices = [int(idx.strip()) for idx in selected_cards_indices.split(',')]
+        selected_cards_indices = [int(idx.strip()) for idx in selected_cards_indices.split(',') if idx.strip().isdigit()]
 
         # Call the put_cards_on_table method in the Game class
         success, message = game_instance.put_cards_on_table(selected_cards_indices)
@@ -119,7 +122,7 @@ def add_cards_to_stack():
     stack_index = int(request.form.get('stack_index'))
 
     # Convert selected card indices to a list of integers
-    selected_cards_indices = [int(idx.strip()) for idx in selected_cards_indices.split(',')]
+    selected_cards_indices = [int(idx.strip()) for idx in selected_cards_indices.split(',') if idx.strip().isdigit()]
 
     # Call the add_cards_to_stack method in the Game class
     success, message = game_instance.add_cards_to_stack(selected_cards_indices, stack_index)
@@ -155,6 +158,7 @@ def draw_cards():
             return redirect(url_for('board'))
 
     return redirect(url_for('index'))
+
 
 @app.route('/victory')
 def victory():

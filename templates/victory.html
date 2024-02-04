@@ -11,8 +11,13 @@
 <body>
 
     {% if winner_name != "It's a tie!" %}
+    {% if winner_name == "Computer" %}
+    <h1>You lost!</h1>
+    <h2>The computer won!</h2>
+    {% else %}
     <h1>Congratulations, {{ winner_name }}!</h1>
     <h2>You won!</h2>
+    {% endif %}
     {% else %}
     <h1>{{ winner_name }}</h1>
     <h2>Both players have the same number of cards.</h2>

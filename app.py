@@ -66,6 +66,8 @@ def start_online():
 
     return render_template('online.html')
 
+# ...
+
 @app.route('/board')
 def board():
     global game_instance
@@ -79,12 +81,17 @@ def board():
     # Get flashed error messages
     error_messages = get_flashed_messages(category_filter=['error'])
 
-        # Enumerate the stacks on the table and pass them to the template
+    # Enumerate the stacks on the table and pass them to the template
     enumerated_table = list(enumerate(game_instance.table))
 
+    # Find the first valid combination
     first_valid_combination = game_instance.find_first_valid_combination()
 
-    return render_template('board.html', player_deck=player_deck, error_messages=error_messages, game_instance=game_instance, enumerated_table=enumerated_table, first_valid_combination=first_valid_combination)
+    find_table_stack = game_instance.find_table_stack()
+
+
+    return render_template('board.html', player_deck=player_deck, error_messages=error_messages, game_instance=game_instance, enumerated_table=enumerated_table, first_valid_combination=first_valid_combination, find_table_stack=find_table_stack)
+
     
 @app.route('/put_cards_on_table', methods=['POST'])
 def put_cards_on_table():

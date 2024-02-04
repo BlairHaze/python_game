@@ -92,6 +92,16 @@
         <button type="submit">Add Cards to Stack</button>
     </form>
 
-</body>
+    {% if find_table_stack %}
+    <h2>First Valid Combination:</h2>
+    <div class="valid-combination-container">
+        {% for card in find_table_stack %}
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/' + card['Rank'] + '_' + card['Suit'] + '.png') }}"
+                alt="{{ card['Rank'] }} of {{ card['Suit'] }}">
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
 </html>

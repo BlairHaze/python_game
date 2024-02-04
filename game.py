@@ -327,6 +327,31 @@ class Game:
                     return sorted_pile  # Return the first valid combination found
 
         return None  # Return None if no valid combination is found
+    
+    def find_table_stack(self):
+        # Iterate through individual stacks on the table
+        for table_stack in self.table:
+            # Iterate over all possible combinations of card from player's hand
+            for card in self.current_player.deck:
+                # Create a temporary stack with the card from player's hand and the current table stack
+                temp_stack = table_stack + [card]
+
+                # Sort the temporary stack in ascending order based on card values
+                sorted_stack = sorted(temp_stack, key=lambda x: x['Value'])
+
+                # Check if the sorted stack is valid using your is_valid function
+                if self.is_valid(sorted_stack):
+                    return sorted_stack  # Return the first valid combination found
+
+        return None  # Return None if no valid combination is found
+    
+
+    
+
+
+
+
+
 
 
 

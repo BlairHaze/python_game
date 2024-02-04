@@ -211,3 +211,16 @@ input[type="submit"]:hover {
     font-weight: bold;
     /* Make the error messages bolder */
 }
+
+button,
+input[type="submit"] {
+    padding: 12px 20px;
+    background-color: #3498db;
+    /* Set your desired background color */
+    color: #fff;
+    /* Set your desired text color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}

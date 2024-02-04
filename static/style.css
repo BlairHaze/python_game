@@ -114,6 +114,16 @@ ul {
 
 li {
     margin-bottom: 10px;
+    font-size: 20px;
+}
+
+ol {
+    text-align: left;
+    font-size: 20px;
+    max-width: 600px;
+    margin: 0 auto 20px;
+    counter-reset: item;
+    /* Reset the counter for ordered lists */
 }
 
 a {
@@ -174,7 +184,55 @@ input[type="submit"] {
     transition: background-color 0.3s ease;
 }
 
+button,
+input[type="submit"] {
+    padding: 12px 20px;
+    background-color: #3498db;
+    /* Set your desired background color */
+    color: #fff;
+    /* Set your desired text color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
 input[type="submit"]:hover {
     background-color: #2074a0;
     /* Use a slightly darker shade for hover effect */
+}
+
+ol li:before {
+    content: counter(item);
+    counter-increment: item;
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold;
+    color: #3498db;
+    /* Set a color for the list numbers */
+}
+
+p {
+    font-size: 20px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+ul li a {
+    display: block;
+    max-width: 150px;
+    /* Adjust the max-width to your preference */
+    margin: 0 auto;
+    /* Center the button within the available width */
+    text-align: center;
+    /* Center the text within the button */
+    white-space: nowrap;
+    /* Prevent the text from wrapping */
+    overflow: hidden;
+    /* Hide any overflow if the text is too long */
+    text-overflow: ellipsis;
+    /* Display ellipsis (...) for overflow */
 }

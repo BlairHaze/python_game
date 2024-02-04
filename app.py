@@ -196,5 +196,9 @@ def victory():
     # Redirect to the index page if the game is not over
     return redirect(url_for('index'))
 
+@app.route('/rules')
+def rules():
+    return render_template('rules.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

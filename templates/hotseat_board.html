@@ -12,7 +12,7 @@
 
 <body>
 
-    <h1>Hotseat Board - {{ game_instance.current_player.name }}'s turn</h1>
+    <h1>🃁 Hotseat Board - {{ game_instance.current_player.name }}'s turn 🃁</h1>
 
     {% if error_messages %}
     <div class="error-messages">
@@ -90,6 +90,10 @@
         <input type="number" id="stack_index" name="stack_index" required>
 
         <button type="submit">Add Cards to Stack</button>
+    </form>
+
+    <form action="{{ url_for('index') }}" method="get">
+        <button type="submit">Return to the Front Page</button>
     </form>
 
 </body>

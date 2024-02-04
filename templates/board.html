@@ -12,7 +12,7 @@
 
 <body>
 
-    <h1>Singleplayer Board - {{ game_instance.current_player.name }}'s turn</h1>
+    <h1>🃁 Singleplayer Board - {{ game_instance.current_player.name }}'s turn 🃁</h1>
 
     {% if error_messages %}
     <div class="error-messages">
@@ -92,16 +92,8 @@
         <button type="submit">Add Cards to Stack</button>
     </form>
 
-    {% if find_table_stack %}
-    <h2>Extended Valid Combination:</h2>
-    <div class="valid-combination-container">
-        <p>Indices of cards in the extended valid combination:</p>
-        <ul>
-            {% for card_index in find_table_stack %}
-            <li>{{ card_index }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
+    <form action="{{ url_for('index') }}" method="get">
+        <button type="submit">Return to the Front Page</button>
+    </form>
 
 </html>

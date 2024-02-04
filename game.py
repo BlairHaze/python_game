@@ -164,8 +164,13 @@ class Game:
             self.current_player.deck = self.general_deck[:6]
             self.general_deck = self.general_deck[6:]
         else:
-
+            find_table_stack = self.find_table_stack()
             first_valid_combination = self.find_first_valid_combination()
+            if find_table_stack:
+                 selected_indices = find_table_stack
+                 success, message = self.add_cards_to_stack(selected_indices, self.which_stack)
+                 if success:
+                     return
             if first_valid_combination:
                 # Put the cards on the table using put_cards_on_table method
                 selected_indices = [self.current_player.deck.index(card) for card in first_valid_combination]
@@ -178,7 +183,14 @@ class Game:
         if all(player.deck for player in [self.player1, self.player2]):
             self.both_players_drew_cards = True
         
+
+
+        # Check if both players have drawn their cards
+        if all(player.deck for player in [self.player1, self.player2]):
+            self.both_players_drew_cards = True
+
         self.switch_to_next_player()
+
 
 
         
@@ -354,6 +366,9 @@ class Game:
         return None  # Return None if no valid combination is found
     
     def find_table_stack(self):
+
+        if self.current_player == self.player1 and self.player2.name != "Computer":
+            return None
         # Iterate through individual stacks on the table
         for table_stack in self.table:
             # Iterate over all possible combinations of card indices from player's hand
@@ -363,7 +378,8 @@ class Game:
 
                 # Sort the temporary stack in ascending order based on card values
                 sorted_stack = sorted(temp_stack, key=lambda x: x['Value'])
-
+                
+                self.which_stack = self.table.index(table_stack)
                 # Check if the sorted stack is valid using your is_valid function
                 if self.is_valid(sorted_stack):
                     valid_indices = [card_index]  # Store the index of the initial card

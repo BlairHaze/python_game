@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Rules</title>
+</head>
+
+<body>
+
+    <h1>The Rules of Machiavelli</h1>
+    <h2>The player has 3 aviable actions</h2>
+    <ol>
+        <li>Draw a card</li>
+        <li>Put a valid combination of cards on the table</li>
+        <li>Put a card in one of the stacks already on the table (it needs to be a valid combination together)</li>
+    </ol>
+    <p>Each of these actions uses up the player's turn</p>
+    <h2>The game</h2>
+    <ol>
+        <li>The players are dealt 6 cards from a deck of 104 cards</li>
+        <li>Before the player can edit the current state of the table, they have to put a valid combination on it at
+            least once</li>
+        <li>The goal of the game is to have less cards in your hand the opponent</li>
+        <li>When the stack of cards from which the players draw their cards runs out of cards the player with the least
+            amount of cards in their hand wins</li>
+    </ol>
+    <h2>Valid card combinations</h2>
+    <ul>
+        <li>Three or more cards with the same rank and different suits (for example. 7♥ 7♦ 7♠)</li>
+        <li>Three or more cards with the same suit and sequential values (for example. 3♠ 4♠ 5♠)</li>
+    </ul>
+
+
+    <form action="{{ url_for('index') }}" method="get">
+        <button type="submit">Return to the Front Page</button>
+    </form>
+
+</body>
+
+</html>

@@ -27,6 +27,12 @@ class Game:
         elif self.player2.name:
             return 'hotseat'
 
+    def is_general_deck_empty(self):
+        if self.general_deck:
+            return False
+        else:
+            return True
+
     def create_deck(self):
         self.suits = ['hearts', 'diamonds', 'clubs', 'spades']
         self.ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
@@ -124,6 +130,8 @@ class Game:
             self.draw_cards_for_computer()
 
     def draw_cards_for_computer(self):
+        if self.is_game_over():
+            self.draw_cards()
         if not self.current_player.deck:
             self.current_player.deck = self.general_deck[:6]
             self.general_deck = self.general_deck[6:]
@@ -131,24 +139,24 @@ class Game:
             find_table_stack = self.find_table_stack()
             first_valid_combination = self.find_first_valid_combination()
             if find_table_stack:
-                 selected_indices = find_table_stack
-                 success, message = self.add_cards_to_stack(selected_indices, self.which_stack)
-                 if success:
-                     return
+                selected_indices = find_table_stack
+                success, message = self.add_cards_to_stack(selected_indices, self.which_stack)
+                if success:
+                    return
             if first_valid_combination:
                 selected_indices = [self.current_player.deck.index(card) for card in first_valid_combination]
                 success, message = self.put_cards_on_table(selected_indices)
                 if success:
-                    return  
+                    return
             self.current_player.deck.append(self.general_deck.pop())
-        
-        if all(player.deck for player in [self.player1, self.player2]):
-            self.both_players_drew_cards = True
-        
+
         if all(player.deck for player in [self.player1, self.player2]):
             self.both_players_drew_cards = True
 
-        self.switch_to_next_player()       
+        if all(player.deck for player in [self.player1, self.player2]):
+            self.both_players_drew_cards = True
+
+        self.switch_to_next_player()
 
     def switch_to_next_player(self):
         if self.current_player == self.player1:

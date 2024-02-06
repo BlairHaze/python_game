@@ -3,7 +3,7 @@ from game import Game
 
 app = Flask(__name__)
 app.secret_key = '0dbf3b3e-3f3d-4f3f-8f3f-3f3f3f3f3f3f'
-game_instance = None  
+game_instance = None
 
 @app.route('/')
 def index():
@@ -25,7 +25,7 @@ def start_singleplayer():
 @app.route('/board')
 def board():
     global game_instance
-    
+
     if game_instance is None:
         return redirect(url_for('index'))
 
@@ -56,7 +56,7 @@ def start_hotseat():
 @app.route('/hotseat_board')
 def hotseat_board():
     global game_instance
-    
+
     if game_instance is None:
         return redirect(url_for('index'))
 
@@ -134,6 +134,16 @@ def draw_cards():
 
     return redirect(url_for('index'))
 
+@app.route('/draw_cards_for_computer', methods=['POST'])
+def draw_cards_for_computer():
+    global game_instance
+
+    if game_instance:
+        if game_instance.is_general_deck_empty():
+            return redirect(url_for('victory'))
+
+    return redirect(url_for('index'))
+
 ###### SUB PAGES ######
 
 @app.route('/victory')
@@ -164,4 +174,4 @@ def rules():
     return render_template('rules.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=12111, debug=True)
